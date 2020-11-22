@@ -24,9 +24,9 @@ public class UserController {
     SignupBusinessService signupBusinessService;
 
     /**
-     * This method persist the user if userName or email does
+     * This method expose end point user/signup, used to register new user to quora
      *
-     * @param signupUserRequest char array.
+     * @param signupUserRequest request to register user.
      * @return SignupUserResponse
      */
     @RequestMapping(method = RequestMethod.POST, path = "user/signup", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

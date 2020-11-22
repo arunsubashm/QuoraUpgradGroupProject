@@ -202,7 +202,7 @@ public class UserEntity {
     }
 
     /**
-     * @return
+     * @return aboutme
      */
     public String getAboutme() {
         return aboutme;
@@ -216,42 +216,42 @@ public class UserEntity {
     }
 
     /**
-     * @return
+     * @return dob
      */
     public String getDob() {
         return dob;
     }
 
     /**
-     * @param dob
+     * @param dob users date of birth
      */
     public void setDob(String dob) {
         this.dob = dob;
     }
 
     /**
-     * @return
+     * @return role
      */
     public String getRole() {
         return role;
     }
 
     /**
-     * @param role
+     * @param role role can be admin or non-admin
      */
     public void setRole(String role) {
         this.role = role;
     }
 
     /**
-     * @return
+     * @return contactNumber
      */
     public String getContactNumber() {
         return contactNumber;
     }
 
     /**
-     * @param contactNumber
+     * @param contactNumber contactNumber
      */
     public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;

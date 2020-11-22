@@ -11,7 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
-    /**Handles SignUpRestrictedException. Triggered when an object fails validation
+    /**Handles SignUpRestrictedException. Triggered when duplicate username and email found during signup.
      *
      * @param exception SignUpRestrictedException
      * @param request WebRequest

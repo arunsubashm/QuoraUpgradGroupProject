@@ -11,8 +11,14 @@ import org.springframework.web.context.request.WebRequest;
 @RestControllerAdvice
 public class RestExceptionHandler {
 
+    /**Handles SignUpRestrictedException. Triggered when an object fails validation
+     *
+     * @param exception SignUpRestrictedException
+     * @param request WebRequest
+     * @return ResponseEntity
+     */
     @ExceptionHandler(SignUpRestrictedException.class)
-    public ResponseEntity<ErrorResponse> resourceNotFoundException(SignUpRestrictedException exception, WebRequest request) {
+    public ResponseEntity<ErrorResponse> signUpRestrictedException(SignUpRestrictedException exception, WebRequest request) {
         return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(exception.getCode()).message(exception.getErrorMessage()), HttpStatus.CONFLICT);
     }
 }

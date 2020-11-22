@@ -14,11 +14,24 @@ public class UserDao {
     @PersistenceContext
     EntityManager entityManager;
 
+    /**
+     * This method persist the user in db
+     *
+     * @param userEntity
+     * @return UserEntity after successful insertion
+     */
     public UserEntity createUser(UserEntity userEntity) {
         entityManager.persist(userEntity);
         return userEntity;
     }
 
+    /**
+     * This method gets the user details by email
+     *
+     * @param email
+     * @return UserEntity when email is found.
+     * @throws NoResultException if no user details are found with email.
+     */
     public UserEntity fetchUserByEmail(String email) {
         try {
             return entityManager.createNamedQuery("getUserByEmail", UserEntity.class)
@@ -28,10 +41,17 @@ public class UserDao {
         }
     }
 
-    public UserEntity fetchUserByUserName(String email) {
+    /**
+     * This method gets the user details by userName
+     *
+     * @param userName
+     * @return UserEntity when userName is found.
+     * @throws NoResultException if no user details are found with userName.
+     */
+    public UserEntity fetchUserByUserName(String userName) {
         try {
             return entityManager.createNamedQuery("getUserByUserName", UserEntity.class)
-                    .setParameter("username", email).getSingleResult();
+                    .setParameter("username", userName).getSingleResult();
         } catch (NoResultException noResultException) {
             return null;
         }

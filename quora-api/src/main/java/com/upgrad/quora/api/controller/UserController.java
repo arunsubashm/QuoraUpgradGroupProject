@@ -23,6 +23,12 @@ public class UserController {
     @Autowired
     SignupBusinessService signupBusinessService;
 
+    /**
+     * This method persist the user if userName or email does
+     *
+     * @param signupUserRequest char array.
+     * @return SignupUserResponse
+     */
     @RequestMapping(method = RequestMethod.POST, path = "user/signup", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignupUserResponse> signup(final SignupUserRequest signupUserRequest) throws SignUpRestrictedException {
         UserEntity userEntity = new UserEntity();
@@ -32,7 +38,6 @@ public class UserController {
         userEntity.setUserName(signupUserRequest.getUserName());
         userEntity.setEmail(signupUserRequest.getEmailAddress());
         userEntity.setPassword(signupUserRequest.getPassword());
-        userEntity.setSalt("salt");
         userEntity.setCountry(signupUserRequest.getCountry());
         userEntity.setAboutme(signupUserRequest.getAboutMe());
         userEntity.setDob(signupUserRequest.getDob());

@@ -80,5 +80,31 @@ public class UserDao {
     public void updateUser(UserEntity updateUserEntity) {
         entityManager.merge(updateUserEntity);
     }
+
+    /**This method deletes the user and flush's it.
+     *
+     * @param userId UUID to be deleted
+     * @return true
+     */
+    public boolean deleteUser(String userId) {
+        entityManager.createQuery("DELETE FROM UserEntity c WHERE c.uuid = :uuid")
+                .setParameter("uuid", userId).executeUpdate();
+
+        entityManager.flush();
+        return true;
+    }
+
+    /** method to fetch UserEntity by uuid
+     *
+     * @param uuid Unique id of the user
+     * @return UserEntity
+     */
+    public UserEntity getUserEntityById(final String uuid) {
+        try {
+            return entityManager.createNamedQuery("fetchUserByUserId", UserEntity.class).setParameter("uuid", uuid).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
 }
 

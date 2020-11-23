@@ -39,7 +39,7 @@ public class RestExceptionHandler {
     }
 
     /**
-     * Handles AuthorizationFailedException. Triggered when condition not met during deleting the user.
+     * Handles AuthorizationFailedException. Triggered when User not found.
      *
      * @param exception AuthorizationFailedException
      * @param request   WebRequest

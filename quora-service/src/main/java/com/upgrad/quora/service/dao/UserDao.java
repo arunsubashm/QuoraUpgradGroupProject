@@ -87,9 +87,7 @@ public class UserDao {
      * @return true
      */
     public boolean deleteUser(String userId) {
-        entityManager.createQuery("DELETE FROM UserEntity c WHERE c.uuid = :uuid")
-                .setParameter("uuid", userId).executeUpdate();
-
+        entityManager.createNamedQuery("deleteUserByUserId", UserEntity.class).setParameter("uuid", userId).executeUpdate();
         entityManager.flush();
         return true;
     }

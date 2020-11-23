@@ -55,7 +55,7 @@ public class RestExceptionHandler {
      * AuthenticationFailedException - HttpStatus.UNAUTHORIZED
      *
      * @param authFailedException
-     * @param request             WebRequest
+     * @param request WebRequest
      * @return ResponseEntity
      */
 

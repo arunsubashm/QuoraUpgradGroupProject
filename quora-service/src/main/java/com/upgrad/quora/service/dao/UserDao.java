@@ -1,8 +1,8 @@
 package com.upgrad.quora.service.dao;
 
+import com.upgrad.quora.service.entity.UserAuthTokenEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -55,6 +55,30 @@ public class UserDao {
         } catch (NoResultException noResultException) {
             return null;
         }
+    }
+
+    /**
+     * This method gets the Authentication access token of the user from database
+     *
+     * @param accessToken
+     * @return UserEntity when userName is found.
+     * @throws NoResultException if there is no accesstoken generated for the user.
+     */
+    public UserAuthTokenEntity getUserByAuthtoken(final String accessToken) {
+        try {
+            return entityManager.createNamedQuery("userAuthTokenByAccessToken", UserAuthTokenEntity.class).setParameter("accessToken", accessToken).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    public UserAuthTokenEntity createAuthToken(final UserAuthTokenEntity userAuthTokenEntity) {
+        entityManager.persist(userAuthTokenEntity);
+        return userAuthTokenEntity;
+    }
+
+    public void updateUser(UserEntity updateUserEntity) {
+        entityManager.merge(updateUserEntity);
     }
 }
 

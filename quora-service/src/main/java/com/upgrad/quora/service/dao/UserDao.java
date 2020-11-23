@@ -61,8 +61,8 @@ public class UserDao {
      * This method gets the Authentication access token of the user from database
      *
      * @param accessToken
-     * @return UserEntity when userName is found.
-     * @throws NoResultException if there is no accesstoken generated for the user.
+     * @return UserAuthTokenEntity if a JWT Token is found.
+     * @throws NoResultException if there is no accesstoken exists.
      */
     public UserAuthTokenEntity getUserByAuthtoken(final String accessToken) {
         try {
@@ -72,12 +72,34 @@ public class UserDao {
         }
     }
 
+    /**
+     * This method adds the Authentication access token record of the user to the database
+     *
+     * @param userAuthTokenEntity
+     * @return UserAuthTokenEntity.
+     */
     public UserAuthTokenEntity createAuthToken(final UserAuthTokenEntity userAuthTokenEntity) {
         entityManager.persist(userAuthTokenEntity);
         return userAuthTokenEntity;
     }
 
-    public void updateUser(UserEntity updateUserEntity) {
+    /**
+     * This method updates the Authentication access token record of the user to the database
+     *
+     * @param userAuthTokenEntity
+     * @return None.
+     */
+    public void updateAuthToken(final UserAuthTokenEntity userAuthTokenEntity) {
+        entityManager.merge(userAuthTokenEntity);
+    }
+
+    /**
+     * This method updates the user details to the database
+     *
+     * @param UserEntity
+     * @return None.
+     */
+    public void updateUser(final UserEntity updateUserEntity) {
         entityManager.merge(updateUserEntity);
     }
 

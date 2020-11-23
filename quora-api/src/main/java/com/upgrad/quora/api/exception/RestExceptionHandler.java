@@ -2,6 +2,7 @@ package com.upgrad.quora.api.exception;
 
 import com.upgrad.quora.api.model.ErrorResponse;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
+import com.upgrad.quora.service.exception.SignOutRestrictedException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.SignUpRestrictedException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
@@ -62,5 +63,18 @@ public class RestExceptionHandler {
     @ExceptionHandler(AuthenticationFailedException.class)
     public ResponseEntity<ErrorResponse> AuthenticationFailedException(AuthenticationFailedException authFailedException, WebRequest request) {
         return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(authFailedException.getCode()).message(authFailedException.getErrorMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    /** Handles the SignOutRestrictedException. This is triggered when we do not find a matching JWT Token
+     * AuthenticationFailedException - HttpStatus.UNAUTHORIZED
+     *
+     * @param signOutRestrictedException
+     * @param request WebRequest
+     * @return ResponseEntity
+     */
+
+    @ExceptionHandler(SignOutRestrictedException.class)
+    public ResponseEntity<ErrorResponse> SignOutRestrictedException(SignOutRestrictedException signOutRestrictedException, WebRequest request) {
+        return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(signOutRestrictedException.getCode()).message(signOutRestrictedException.getErrorMessage()), HttpStatus.UNAUTHORIZED);
     }
 }

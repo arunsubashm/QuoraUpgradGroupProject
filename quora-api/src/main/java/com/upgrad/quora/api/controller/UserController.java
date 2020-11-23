@@ -70,25 +70,27 @@ public class UserController {
     public ResponseEntity<SigninResponse> signin(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
 
         String[] splitText = authorization.split("Basic ");
-
+        SigninResponse signinResponse = null;
+        HttpHeaders headers = new HttpHeaders();
         byte[] decoder = Base64.getDecoder().decode(splitText[1]);
         String decodedText = new String(decoder);
         String[] decodedTextArray = decodedText.split(":");
-        if (decodedTextArray.length > 2) {
+        if (decodedTextArray.length == 2) {
             UserAuthTokenEntity userAuthToken = authenticationService.auth(decodedTextArray[0], decodedTextArray[1]);
 
             UserEntity user = userAuthToken.getUser();
 
-            SigninResponse signinResponse = new SigninResponse().id(user.getUuid())
+            signinResponse = new SigninResponse().id(user.getUuid())
                     .message("SIGNED IN SUCCESSFULLY");
 
-            HttpHeaders headers = new HttpHeaders();
+
             headers.add("access-token", userAuthToken.getAccessToken());
             return new ResponseEntity<>(signinResponse, headers, HttpStatus.OK);
         } else {
-            return null;
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
+
 }
 
 

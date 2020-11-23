@@ -4,6 +4,7 @@ import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.UserAuthTokenEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
+import com.upgrad.quora.service.exception.SignOutRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -26,11 +27,11 @@ public class AuthenticationService {
     @Transactional(propagation = Propagation.REQUIRED)
 
     /**
-     * Method Auth is used for user authentication/ sign in purpose.
+     * Method signin is used for user authentication/ sign in purpose.
      * The user authenticates in the application and after successful authentication, JWT token is given to a user
      */
 
-    public UserAuthTokenEntity auth(final String username, final String password) throws AuthenticationFailedException {
+    public UserAuthTokenEntity signin(final String username, final String password) throws AuthenticationFailedException {
         UserEntity userEntity = userDao.fetchUserByUserName(username);
 
         /**
@@ -66,6 +67,32 @@ public class AuthenticationService {
          */
         else {
             throw new AuthenticationFailedException("ATH-002", "Password failed");
+        }
+    }
+
+    /**
+     * Method signout is used for signing out an user.
+     * The function checks if the JWT token exits. If yes the User details is passed back. If not an
+     * Exception is thrown back
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public UserEntity signout(final String authorization) throws SignOutRestrictedException {
+        UserAuthTokenEntity userAuthTokenEntity;
+        final ZonedDateTime now = ZonedDateTime.now();
+
+        userAuthTokenEntity = userDao.getUserByAuthtoken(authorization);
+
+        // check if a valid JWT token of an active user is passed
+        if (userAuthTokenEntity != null) {
+
+            // Update the logout time and update the record in the database
+            userAuthTokenEntity.setLogoutAt(now);
+            userDao.updateAuthToken(userAuthTokenEntity);
+
+            return (userAuthTokenEntity.getUser());
+
+        } else {
+            throw new SignOutRestrictedException("SGR-001", "User is not Signed in");
         }
     }
 }

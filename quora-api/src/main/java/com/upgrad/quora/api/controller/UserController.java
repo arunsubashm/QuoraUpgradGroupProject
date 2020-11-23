@@ -1,6 +1,7 @@
 package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.api.model.SigninResponse;
+import com.upgrad.quora.api.model.SignoutResponse;
 import com.upgrad.quora.api.model.SignupUserRequest;
 import com.upgrad.quora.api.model.SignupUserResponse;
 import com.upgrad.quora.service.business.AuthenticationService;
@@ -8,6 +9,7 @@ import com.upgrad.quora.service.business.SignupBusinessService;
 import com.upgrad.quora.service.entity.UserAuthTokenEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
+import com.upgrad.quora.service.exception.SignOutRestrictedException;
 import com.upgrad.quora.service.exception.SignUpRestrictedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +31,9 @@ public class UserController {
 
     @Autowired
     SignupBusinessService signupBusinessService;
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
     /**
      * This method expose end point user/signup, used to register new user to quora
@@ -63,20 +68,17 @@ public class UserController {
      * @return SigninResponse
      */
 
-    @Autowired
-    private AuthenticationService authenticationService;
-
     @RequestMapping(method = RequestMethod.POST, path = "/user/signin", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SigninResponse> signin(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
 
         String[] splitText = authorization.split("Basic ");
         SigninResponse signinResponse = null;
         HttpHeaders headers = new HttpHeaders();
-        byte[] decoder = Base64.getDecoder().decode(splitText[1]);
+        byte[] decoder = Base64.getDecoder().decode(splitText[0]);
         String decodedText = new String(decoder);
         String[] decodedTextArray = decodedText.split(":");
         if (decodedTextArray.length == 2) {
-            UserAuthTokenEntity userAuthToken = authenticationService.auth(decodedTextArray[0], decodedTextArray[1]);
+            UserAuthTokenEntity userAuthToken = authenticationService.signin(decodedTextArray[0], decodedTextArray[1]);
 
             UserEntity user = userAuthToken.getUser();
 
@@ -91,6 +93,22 @@ public class UserController {
         }
     }
 
+    /**
+     * This method expose end point user/signout
+     *
+     * @param authorization : authorization token.
+     * @return SignoutResponse
+     */
+
+    @RequestMapping(method = RequestMethod.POST, path = "/user/signout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<SignoutResponse> signout(@RequestHeader("authorization") final String authorization) throws SignOutRestrictedException {
+
+        UserEntity signout = authenticationService.signout(authorization);
+
+        SignoutResponse SignoutResponse = new SignoutResponse().id(signout.getUuid()).message("SIGNED OUT SUCCESSFULLY");
+        return new ResponseEntity<SignoutResponse>(SignoutResponse, HttpStatus.OK);
+
+    }
 }
 
 

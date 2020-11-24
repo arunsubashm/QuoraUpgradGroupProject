@@ -107,7 +107,7 @@ public class AuthenticationService {
      * @throws UserNotFoundException
      */
     @Transactional(propagation = Propagation.REQUIRED)
-    public String checkUserByAuthToken(String authToken, String userId) throws AuthorizationFailedException, UserNotFoundException {
+    public String deleteUserByAuthToken(String authToken, String userId) throws AuthorizationFailedException, UserNotFoundException {
         UserAuthTokenEntity userAuthTokenEntity = userDao.getUserByAuthtoken(authToken);
         UserEntity userEntity = userDao.getUserEntityById(userId);
         //if user is not registered in the system userEntity will be null

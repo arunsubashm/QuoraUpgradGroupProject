@@ -44,7 +44,7 @@ public class QuestionController {
         UserAuthTokenEntity authTokenEntity =  authenticationService.getUserByToken(accessToken);
         if (authTokenEntity != null) {
 
-            List<QuestionEntity> allQuestions = questionsService.getAllQuestions();
+            List<QuestionEntity> allQuestions = questionsService.getAllQuestions(accessToken);
 
             return getListResponseEntity(allQuestions);
         }

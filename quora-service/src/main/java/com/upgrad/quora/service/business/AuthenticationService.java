@@ -130,4 +130,23 @@ public class AuthenticationService {
         userDao.deleteUser(userId);
         return userEntity.getUuid();
     }
+    /**
+     * Get User by Authorization Token.
+     * @param accessToken authToken that is provided during login.
+     * @throws AuthorizationFailedException
+     *
+     */
+    public UserAuthTokenEntity getUserByToken(final String accessToken) throws AuthorizationFailedException {
+        UserAuthTokenEntity userAuthByToken = userDao.getUserByAuthtoken(accessToken);
+
+        if(userAuthByToken == null) {
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        }
+
+        if(userAuthByToken.getLogoutAt() != null) {
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
+        }
+
+        return userAuthByToken;
+    }
 }

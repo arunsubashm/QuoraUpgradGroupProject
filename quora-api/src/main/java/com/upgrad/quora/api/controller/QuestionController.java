@@ -42,11 +42,17 @@ public class QuestionController {
     @RequestMapping(method = RequestMethod.GET, path = "/question/all", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
     public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestions(@RequestHeader("authorization") final String accessToken) throws AuthorizationFailedException {
 
-        authenticationService.getUserByToken(accessToken);
+        UserAuthTokenEntity authTokenEntity =  authenticationService.getUserByToken(accessToken);
+        if (authTokenEntity != null) {
 
-        List<QuestionEntity> allQuestions = questionsService.getAllQuestions();
+            List<QuestionEntity> allQuestions = questionsService.getAllQuestions();
 
-        return getListResponseEntity(allQuestions);
+            return getListResponseEntity(allQuestions);
+        }
+        else
+        {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
     }
 
     /** Handled endpoint to display all questions. Prepares the List of All question to be displayed.

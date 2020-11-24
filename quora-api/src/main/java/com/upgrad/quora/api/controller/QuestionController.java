@@ -85,12 +85,12 @@ public class QuestionController {
      * @throws AuthorizationFailedException
      */
     @RequestMapping(method = RequestMethod.GET, path = "/question/all/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestionByUser(@RequestHeader("authorization") final String accessToken, @PathVariable("userId") final String userId) throws  AuthorizationFailedException {
+    public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestionByUser(@RequestHeader("authorization") final String accessToken, @PathVariable("userId") final String userId) throws AuthorizationFailedException, UserNotFoundException {
 
         UserAuthTokenEntity authTokenEntity =  authenticationService.getUserByToken(accessToken);
         if (authTokenEntity != null) {
 
-            List<QuestionEntity> allQuestionsByUser = questionsService.getAllQuestionsByUser(userId);
+            List<QuestionEntity> allQuestionsByUser = questionsService.getAllQuestionsByUser(userId, accessToken);
 
             return getListResponseEntity(allQuestionsByUser);
         }

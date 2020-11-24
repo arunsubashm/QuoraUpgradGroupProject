@@ -4,7 +4,9 @@ import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.UserAuthTokenEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
+import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.SignOutRestrictedException;
+import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -94,5 +96,38 @@ public class AuthenticationService {
         } else {
             throw new SignOutRestrictedException("SGR-001", "User is not Signed in");
         }
+    }
+
+    /**
+     *
+     * @param authToken authToken that is provided during login.
+     * @param userId UUID of the user.
+     * @return UUID of deleted user.
+     * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public String checkUserByAuthToken(String authToken, String userId) throws AuthorizationFailedException, UserNotFoundException {
+        UserAuthTokenEntity userAuthTokenEntity = userDao.getUserByAuthtoken(authToken);
+        UserEntity userEntity = userDao.getUserEntityById(userId);
+        //if user is not registered in the system userEntity will be null
+        if (null == userEntity){
+            throw new UserNotFoundException("USR-001", "User with entered uuid to be deleted does not exist");
+        }
+        // non-admin user cannot delete the users
+        if (!"admin".equalsIgnoreCase(userEntity.getRole())){
+            throw new AuthorizationFailedException("ATHR-003", "Unauthorized Access, Entered user is not an admin");
+        }
+        //userAuthTokenEntity is null when user is registered successfully but not signed in to the system.
+        if (userAuthTokenEntity == null) {
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        }
+        //logoutAt() gets updated once the user is logged out
+        if (null != userAuthTokenEntity.getLogoutAt()){
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out");
+        }
+        // delete the user by UUID
+        userDao.deleteUser(userId);
+        return userEntity.getUuid();
     }
 }

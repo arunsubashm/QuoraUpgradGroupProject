@@ -40,7 +40,7 @@ public class QuestionDao {
     public List<QuestionEntity> getAllQuestionsByUser(final String userId) {
         try {
             List questionsList = entityManager.createNamedQuery("getAllQuestionsByUser")
-                    .setParameter("userId", userId)
+                    .setParameter("uuid", userId)
                     .getResultList();
 
             return questionsList;

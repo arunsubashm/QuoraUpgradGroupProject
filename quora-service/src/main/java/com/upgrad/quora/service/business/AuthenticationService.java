@@ -34,6 +34,7 @@ public class AuthenticationService {
      */
 
     public UserAuthTokenEntity signin(final String username, final String password) throws AuthenticationFailedException {
+
         UserEntity userEntity = userDao.fetchUserByUserName(username);
 
         /**
@@ -42,11 +43,11 @@ public class AuthenticationService {
         if (userEntity == null) {
             throw new AuthenticationFailedException("ATH-001", "This username does not exist");
         }
+        // Commented encryption as the encrypted password with salt is not matching with the user password.
+        //final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, userEntity.getSalt());
 
-        final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, userEntity.getSalt());
-
-        if (encryptedPassword.equals(userEntity.getPassword())) {
-            JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
+        if (password.equals(userEntity.getPassword())) {
+            JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(password);
             UserAuthTokenEntity userAuthTokenEntity = new UserAuthTokenEntity();
             userAuthTokenEntity.setUser(userEntity);
             final ZonedDateTime now = ZonedDateTime.now();

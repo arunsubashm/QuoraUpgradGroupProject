@@ -1,5 +1,8 @@
 package com.upgrad.quora.service.entity;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -10,7 +13,7 @@ import java.time.ZonedDateTime;
 @Table(name = "question")
 @NamedQueries({
         @NamedQuery(name = "getAllQuestions", query = "select q from QuestionEntity q"),
-        @NamedQuery(name = "getAllQuestionsByUser", query = "select q from QuestionEntity q where q.userId = :userId")
+        @NamedQuery(name = "getAllQuestionsByUser", query = "select q from QuestionEntity q where q.uuid = :uuid")
 })
 
     public class QuestionEntity implements Serializable {
@@ -37,6 +40,7 @@ import java.time.ZonedDateTime;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserEntity userId;
 
     public int getId() {

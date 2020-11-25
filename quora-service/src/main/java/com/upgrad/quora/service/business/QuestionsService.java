@@ -42,23 +42,23 @@ public class QuestionsService {
     public List<QuestionEntity> getAllQuestionsByUser(final String userId, final String accessToken) throws AuthorizationFailedException, UserNotFoundException {
 
         UserAuthTokenEntity authTokenEntity =  authenticationService.getUserByToken(accessToken);
-        /**
-         * If the access token provided by the user does not exist in the database throw 'AuthorizationFailedException'
-         */
+
+         // Check If the access token provided by the user does not exist in the database throw 'AuthorizationFailedException''
+
         if (authTokenEntity == null) {
             throw  new AuthorizationFailedException("ATHR-001", "User has not signed in");
         }
 
         UserAuthTokenEntity userAuthTokenEntity = userDao.getUserByAuthtoken(accessToken);
-        /**
-         * If the user has signed out, throw 'AuthorizationFailedException'
-         */
+
+         // Check If the user has signed out, if yes throw 'AuthorizationFailedException' with the message code-'ATHR-002'
+        // and message-'User is signed out.Sign in first to get all questions posted by a specific user'
+
         if (userAuthTokenEntity.getLogoutAt() != null) {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get all questions posted by a specific user");
         }
-        /**
-         * If the user with uuid whose questions are to be retrieved from the database does not exist in the database, throw 'UserNotFoundException'
-         */
+
+         // Check if the user with uuid whose questions are to be retrieved from the database does not exist in the database, throw 'UserNotFoundException''
 
         if (userDao.getUserEntityById(userId) == null) {
             throw new UserNotFoundException("USR-001", "User with entered uuid whose question details are to be seen does not exist");

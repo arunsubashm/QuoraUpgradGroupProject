@@ -28,30 +28,20 @@ public class QuestionController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @Autowired
-    private UserDao userDao;
 
     /** Implementation of GetAllQuestions endpoint.
      * This method expose end point /question/all
      *
-     * @param authorization : authorization token.
+     * @param accessToken : authorization token.
      * @return List<QuestionDetailsResponse>
      * @throws AuthorizationFailedException
      */
     @RequestMapping(method = RequestMethod.GET, path = "/question/all", produces = MediaType.APPLICATION_JSON_UTF8_VALUE )
     public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestions(@RequestHeader("authorization") final String accessToken) throws AuthorizationFailedException {
 
-        UserAuthTokenEntity authTokenEntity =  authenticationService.getUserByToken(accessToken);
-        if (authTokenEntity != null) {
+        List<QuestionEntity> allQuestions = questionsService.getAllQuestions(accessToken);
+        return getListResponseEntity(allQuestions);
 
-            List<QuestionEntity> allQuestions = questionsService.getAllQuestions(accessToken);
-
-            return getListResponseEntity(allQuestions);
-        }
-        else
-        {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
     }
 
     /** Handled endpoint to display all questions. Prepares the List of All question to be displayed.
@@ -77,27 +67,21 @@ public class QuestionController {
         }
     }
 
-    /** Implementation of GetAllQuestions endpoint.
-     * This method expose end point /question/all
+    /** This endpoint is implemented to fetch all the questions posed by a specific user. Any user can access this endpoint
+     * This method expose end point question/all/{userId}
      *
-     * @param authorization : authorization token.
+     * @param accessToken : authorization token.
+     * @param UserId : UUID of the User.
      * @return List<QuestionDetailsResponse>
      * @throws AuthorizationFailedException
+     * @throws UserNotFoundException
      */
     @RequestMapping(method = RequestMethod.GET, path = "/question/all/{userId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestionByUser(@RequestHeader("authorization") final String accessToken, @PathVariable("userId") final String userId) throws AuthorizationFailedException, UserNotFoundException {
 
-        UserAuthTokenEntity authTokenEntity =  authenticationService.getUserByToken(accessToken);
-        if (authTokenEntity != null) {
+        List<QuestionEntity> allQuestionsByUser = questionsService.getAllQuestionsByUser(userId, accessToken);
+        return getListResponseEntity(allQuestionsByUser);
 
-            List<QuestionEntity> allQuestionsByUser = questionsService.getAllQuestionsByUser(userId, accessToken);
-
-            return getListResponseEntity(allQuestionsByUser);
-        }
-        else
-        {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
     }
 
 }

@@ -32,7 +32,7 @@ public class UserDao {
      * @return UserEntity when email is found.
      * @throws NoResultException if no user details are found with email.
      */
-    public UserEntity fetchUserByEmail(String email) {
+    public UserEntity getUserByEmail(String email) {
         try {
             return entityManager.createNamedQuery("getUserByEmail", UserEntity.class)
                     .setParameter("email", email).getSingleResult();
@@ -48,7 +48,7 @@ public class UserDao {
      * @return UserEntity when userName is found.
      * @throws NoResultException if no user details are found with userName.
      */
-    public UserEntity fetchUserByUserName(String userName) {
+    public UserEntity getUserByUserName(String userName) {
         try {
             return entityManager.createNamedQuery("getUserByUserName", UserEntity.class)
                     .setParameter("username", userName).getSingleResult();
@@ -121,7 +121,7 @@ public class UserDao {
      */
     public UserEntity getUserEntityById(final String uuid) {
         try {
-            return entityManager.createNamedQuery("fetchUserByUserId", UserEntity.class).setParameter("uuid", uuid).getSingleResult();
+            return entityManager.createNamedQuery("getUserByUserId", UserEntity.class).setParameter("uuid", uuid).getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }

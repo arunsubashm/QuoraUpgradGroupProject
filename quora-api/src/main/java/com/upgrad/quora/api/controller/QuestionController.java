@@ -1,5 +1,6 @@
 package com.upgrad.quora.api.controller;
 
+import com.upgrad.quora.api.model.QuestionDeleteResponse;
 import com.upgrad.quora.api.model.QuestionDetailsResponse;
 import com.upgrad.quora.service.business.AuthenticationService;
 import com.upgrad.quora.service.business.QuestionsService;
@@ -9,6 +10,7 @@ import com.upgrad.quora.service.entity.UserAuthTokenEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.InvalidQuestionException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -83,5 +85,20 @@ public class QuestionController {
         return getListResponseEntity(allQuestionsByUser);
 
     }
+    /** This endpoint is used to delete a question that has been posted by a user.
+     * the question owner of the question or admin can delete a question.
+     * @Param accessToken : Authorization token of the logged in user
+     * @Param questionId : ID of the Question.
+     * @returns : ResponseEntity<QuestionDeletedResponse>
+     * @throws AuthorizationFailedException
+     * @throws InvlidQuestionException
+     */
 
+    @RequestMapping(method = RequestMethod.DELETE,path = "question/delete/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<QuestionDeleteResponse> deleteQuestion (@RequestHeader("authorization") final String accessToken, @PathVariable("questionId") final String questionId) throws AuthorizationFailedException, InvalidQuestionException {
+        String deletedQuestionUuid = questionsService.deleteQuestion(accessToken, questionId);
+
+        QuestionDeleteResponse questionDeleteResponse = new QuestionDeleteResponse().id(deletedQuestionUuid).status("QUESTION DELETED");
+        return new ResponseEntity<QuestionDeleteResponse>(questionDeleteResponse, HttpStatus.OK);
+    }
 }

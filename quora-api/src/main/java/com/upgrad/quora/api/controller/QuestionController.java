@@ -1,6 +1,9 @@
 package com.upgrad.quora.api.controller;
 
 import com.upgrad.quora.api.model.QuestionDetailsResponse;
+import com.upgrad.quora.api.model.QuestionRequest;
+import com.upgrad.quora.api.model.QuestionResponse;
+import com.upgrad.quora.api.model.SignupUserRequest;
 import com.upgrad.quora.service.business.AuthenticationService;
 import com.upgrad.quora.service.business.QuestionsService;
 import com.upgrad.quora.service.dao.UserDao;
@@ -9,15 +12,19 @@ import com.upgrad.quora.service.entity.UserAuthTokenEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.RequestViolationException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
+import org.aspectj.weaver.patterns.TypePatternQuestions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/")
@@ -47,7 +54,7 @@ public class QuestionController {
     /** Handled endpoint to display all questions. Prepares the List of All question to be displayed.
      * This method expose end point /question/all
      *
-     * @param allQuestion : List of QuestionEntity
+     * @param allQuestions : List of QuestionEntity
      * @return ResponseEntity
      *
      */
@@ -71,7 +78,7 @@ public class QuestionController {
      * This method expose end point question/all/{userId}
      *
      * @param accessToken : authorization token.
-     * @param UserId : UUID of the User.
+     * @param userId : UUID of the User.
      * @return List<QuestionDetailsResponse>
      * @throws AuthorizationFailedException
      * @throws UserNotFoundException
@@ -82,6 +89,26 @@ public class QuestionController {
         List<QuestionEntity> allQuestionsByUser = questionsService.getAllQuestionsByUser(userId, accessToken);
         return getListResponseEntity(allQuestionsByUser);
 
+    }
+
+
+    /**This endpoint is implemented to create new question in Quora
+     *
+     * @param accessToken
+     * @param questionRequest
+     * @return ResponseEntity
+     * @throws AuthorizationFailedException, RequestViolationException
+     */
+    @RequestMapping(method = RequestMethod.POST, path = "/question/create", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<QuestionResponse> createQuestion(@RequestHeader("authorization") final String accessToken,
+                                                           final QuestionRequest questionRequest) throws AuthorizationFailedException, RequestViolationException {
+        QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.setContent(questionRequest.getContent());
+        questionEntity.setDate(ZonedDateTime.now());
+        questionEntity.setUuid(UUID.randomUUID().toString());
+        QuestionEntity savedQuestion = questionsService.createQuestion(accessToken, questionEntity);
+        QuestionResponse questionResponse = new QuestionResponse().id(savedQuestion.getUuid()).status("QUESTION CREATED");
+        return new ResponseEntity<QuestionResponse>(questionResponse, HttpStatus.CREATED);
     }
 
 }

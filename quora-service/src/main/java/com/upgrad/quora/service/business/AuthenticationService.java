@@ -44,9 +44,9 @@ public class AuthenticationService {
             throw new AuthenticationFailedException("ATH-001", "This username does not exist");
         }
         // Commented encryption as the encrypted password with salt is not matching with the user password.
-        //final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, userEntity.getSalt());
+        final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, userEntity.getSalt());
 
-        if (password.equals(userEntity.getPassword())) {
+        if (encryptedPassword.equals(userEntity.getPassword())) {
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(password);
             UserAuthTokenEntity userAuthTokenEntity = new UserAuthTokenEntity();
             userAuthTokenEntity.setUser(userEntity);

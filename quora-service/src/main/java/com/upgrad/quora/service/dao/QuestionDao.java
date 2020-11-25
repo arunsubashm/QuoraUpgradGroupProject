@@ -48,4 +48,33 @@ public class QuestionDao {
           return null;
         }
     }
+
+    /**
+     * Method to get a Questions by of a user by Question ID.
+     * @param userID
+     * @Param questionID
+     * @return QuestionEntity
+     * @Catch Exception NoResultException
+     */
+    public QuestionEntity getSingleQuestionByUser (final String userID, final String questionId) {
+        try {
+            return entityManager.createNamedQuery("getSingleQuestionByUser", QuestionEntity.class)
+                    .setParameter("uuid", userID)
+                    .setParameter("id",questionId)
+                    .getSingleResult();
+        }
+        catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    /**
+     * Method to delete a Questions by Question ID.
+     * @Param questionID
+     * @return QuestionEntity
+     * @Catch Exception NoResultException
+     */
+    public void deleteQuestionByUser (final int questionId) {
+        entityManager.createQuery("delete from QuestionEntity u where u.id =:questionId").setParameter("questionId", questionId).executeUpdate();
+    }
 }

@@ -85,7 +85,7 @@ public class QuestionsService {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to delete a question");
         }
 
-        QuestionEntity questionEntity = questionDao.getSingleQuestionByUser(userAuthTokenEntity.getUuid(), questionId);
+        QuestionEntity questionEntity = questionDao.getQuestionByUser(questionId);
         // Check If the question with uuid which is to be deleted exist in the database, other wise
         // throw 'InvalidQuestionException'  with the message code-'QUES-001' and message-'Entered question uuid does not exist'.
 
@@ -104,10 +104,9 @@ public class QuestionsService {
             throw new AuthorizationFailedException("ATHR-003", "Only the question owner or admin can delete the question");
         }
 
-        // here deleting the question by question Id field is relevant as it is unique identifier column.
-        // a user may have multiple questions so deleting by uuid field may delete multiple questions.
+        //  deleting the Question by uuid.
 
-        questionDao.deleteQuestionByUser(questionEntity.getId());
+        questionDao.deleteQuestionByUser(questionEntity.getUuid());
         return questionEntity.getUuid();
     }
 }

@@ -14,7 +14,7 @@ import java.time.ZonedDateTime;
 @NamedQueries({
         @NamedQuery(name = "getAllQuestions", query = "select q from QuestionEntity q"),
         @NamedQuery(name = "getAllQuestionsByUser", query = "select q from QuestionEntity q where q.uuid = :uuid"),
-        @NamedQuery(name="getSingleQuestionByUser", query = "select q from QuestionEntity q where q.uuid = :uuid and q.id = :id") // a user can have multiple questions. Hence to get single result filter with uuid and id
+        @NamedQuery(name = "getQuestionByUser", query = "select q from QuestionEntity q where q.uuid = :uuid")
 })
 
     public class QuestionEntity implements Serializable {

@@ -56,11 +56,10 @@ public class QuestionDao {
      * @return QuestionEntity
      * @Catch Exception NoResultException
      */
-    public QuestionEntity getSingleQuestionByUser (final String userID, final String questionId) {
+    public QuestionEntity getQuestionByUser (final String questionId) {
         try {
-            return entityManager.createNamedQuery("getSingleQuestionByUser", QuestionEntity.class)
-                    .setParameter("uuid", userID)
-                    .setParameter("id",questionId)
+            return entityManager.createNamedQuery("getQuestionByUser", QuestionEntity.class)
+                    .setParameter("uuid", questionId)
                     .getSingleResult();
         }
         catch (NoResultException nre) {
@@ -74,7 +73,7 @@ public class QuestionDao {
      * @return QuestionEntity
      * @Catch Exception NoResultException
      */
-    public void deleteQuestionByUser (final int questionId) {
-        entityManager.createQuery("delete from QuestionEntity u where u.id =:questionId").setParameter("questionId", questionId).executeUpdate();
+    public void deleteQuestionByUser (final String questionId) {
+        entityManager.createQuery("delete from QuestionEntity u where u.uuid =:questionId").setParameter("questionId", questionId).executeUpdate();
     }
 }

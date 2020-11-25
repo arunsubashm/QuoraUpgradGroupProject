@@ -1,11 +1,7 @@
 package com.upgrad.quora.api.exception;
 
 import com.upgrad.quora.api.model.ErrorResponse;
-import com.upgrad.quora.service.exception.AuthenticationFailedException;
-import com.upgrad.quora.service.exception.SignOutRestrictedException;
-import com.upgrad.quora.service.exception.AuthorizationFailedException;
-import com.upgrad.quora.service.exception.SignUpRestrictedException;
-import com.upgrad.quora.service.exception.UserNotFoundException;
+import com.upgrad.quora.service.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -61,7 +57,7 @@ public class RestExceptionHandler {
      */
 
     @ExceptionHandler(AuthenticationFailedException.class)
-    public ResponseEntity<ErrorResponse> AuthenticationFailedException(AuthenticationFailedException authFailedException, WebRequest request) {
+    public ResponseEntity<ErrorResponse> authenticationFailedException(AuthenticationFailedException authFailedException, WebRequest request) {
         return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(authFailedException.getCode()).message(authFailedException.getErrorMessage()), HttpStatus.UNAUTHORIZED);
     }
 
@@ -74,7 +70,18 @@ public class RestExceptionHandler {
      */
 
     @ExceptionHandler(SignOutRestrictedException.class)
-    public ResponseEntity<ErrorResponse> SignOutRestrictedException(SignOutRestrictedException signOutRestrictedException, WebRequest request) {
+    public ResponseEntity<ErrorResponse> signOutRestrictedException(SignOutRestrictedException signOutRestrictedException, WebRequest request) {
         return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(signOutRestrictedException.getCode()).message(signOutRestrictedException.getErrorMessage()), HttpStatus.UNAUTHORIZED);
+    }
+
+    /** Handles bad request that is sent to server
+     *
+     * @param exception request violation exception
+     * @param request
+     * @return
+     */
+    @ExceptionHandler(RequestViolationException.class)
+    public ResponseEntity<ErrorResponse> requestViolationException(RequestViolationException exception, WebRequest request) {
+        return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(exception.getCode()).message(exception.getErrorMessage()), HttpStatus.BAD_REQUEST);
     }
 }

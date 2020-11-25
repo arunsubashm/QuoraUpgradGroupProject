@@ -4,10 +4,7 @@ import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthTokenEntity;
-import com.upgrad.quora.service.exception.AuthenticationFailedException;
-import com.upgrad.quora.service.exception.AuthorizationFailedException;
-import com.upgrad.quora.service.exception.SignOutRestrictedException;
-import com.upgrad.quora.service.exception.UserNotFoundException;
+import com.upgrad.quora.service.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -67,5 +64,36 @@ public class QuestionsService {
         List<QuestionEntity> questionsList = questionDao.getAllQuestionsByUser(userId);
 
         return questionsList;
+    }
+
+    /**
+     *
+     * @param accessToken
+     * @param questionEntity contains de
+     * @return
+     * @throws AuthorizationFailedException
+     * @throws RequestViolationException
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public QuestionEntity createQuestion(String accessToken, QuestionEntity questionEntity) throws AuthorizationFailedException, RequestViolationException {
+        UserAuthTokenEntity authTokenEntity = authenticationService.getUserByToken(accessToken);
+        // Throws custom exception when content(i.e question ) us empty
+        if (null == questionEntity.getContent()){
+            throw new RequestViolationException("IAE_001", "content cant be empty");
+        }
+
+        // Check If the access token provided by the user does not exist in the database throw 'AuthorizationFailedException''
+        if (authTokenEntity == null) {
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        }
+
+        //fetch user by auth token
+        UserAuthTokenEntity userAuthTokenEntity = userDao.getUserByAuthtoken(accessToken);
+        if (userAuthTokenEntity.getLogoutAt() != null) {
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get all questions posted by a specific user");
+        }
+        //save the question
+        questionEntity.setUserId(userAuthTokenEntity.getUser());
+        return questionDao.saveQuestion(questionEntity);
     }
 }

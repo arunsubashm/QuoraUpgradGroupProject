@@ -17,8 +17,6 @@ public class QuestionDao {
 
     /**
      * Method to get all Questions as List.
-     * @param null.
-     *
      * @return List<QuestionEntity>
      * @Catch Exception NoResultException
      */
@@ -32,7 +30,7 @@ public class QuestionDao {
 
     /**
      * Method to get all Questions by a User ID.
-     * @param id.
+     * @param userId.
      *
      * @return List<QuestionEntity>
      * @Catch Exception NoResultException
@@ -47,5 +45,14 @@ public class QuestionDao {
         } catch (NoResultException nre) {
           return null;
         }
+    }
+
+    /** Method to save question
+     * @param questionEntity
+     * @return QuestionEntity
+     */
+    public QuestionEntity saveQuestion(QuestionEntity questionEntity) {
+        entityManager.persist(questionEntity);
+        return questionEntity;
     }
 }

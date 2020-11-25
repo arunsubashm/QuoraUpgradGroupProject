@@ -34,6 +34,7 @@ public class AuthenticationService {
      */
 
     public UserAuthTokenEntity signin(final String username, final String password) throws AuthenticationFailedException {
+
         UserEntity userEntity = userDao.fetchUserByUserName(username);
 
         /**
@@ -42,11 +43,11 @@ public class AuthenticationService {
         if (userEntity == null) {
             throw new AuthenticationFailedException("ATH-001", "This username does not exist");
         }
+        // Commented encryption as the encrypted password with salt is not matching with the user password.
+        //final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, userEntity.getSalt());
 
-        final String encryptedPassword = PasswordCryptographyProvider.encrypt(password, userEntity.getSalt());
-
-        if (encryptedPassword.equals(userEntity.getPassword())) {
-            JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
+        if (password.equals(userEntity.getPassword())) {
+            JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(password);
             UserAuthTokenEntity userAuthTokenEntity = new UserAuthTokenEntity();
             userAuthTokenEntity.setUser(userEntity);
             final ZonedDateTime now = ZonedDateTime.now();
@@ -129,5 +130,24 @@ public class AuthenticationService {
         // delete the user by UUID
         userDao.deleteUser(userId);
         return userEntity.getUuid();
+    }
+    /**
+     * Get User by Authorization Token.
+     * @param accessToken authToken that is provided during login.
+     * @throws AuthorizationFailedException
+     *
+     */
+    public UserAuthTokenEntity getUserByToken(final String accessToken) throws AuthorizationFailedException {
+        UserAuthTokenEntity userAuthByToken = userDao.getUserByAuthtoken(accessToken);
+
+        if(userAuthByToken == null) {
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        }
+
+        if(userAuthByToken.getLogoutAt() != null) {
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
+        }
+
+        return userAuthByToken;
     }
 }

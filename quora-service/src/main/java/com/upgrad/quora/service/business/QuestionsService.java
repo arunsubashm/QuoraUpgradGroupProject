@@ -9,8 +9,9 @@ import com.upgrad.quora.service.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
+
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -26,7 +27,7 @@ public class QuestionsService {
     private UserDao userDao;
 
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public List<QuestionEntity> getAllQuestions(final String accessToken) throws  AuthorizationFailedException  {
         UserAuthTokenEntity authTokenEntity =  authenticationService.getUserByToken(accessToken);
         if (authTokenEntity != null) {
@@ -66,7 +67,7 @@ public class QuestionsService {
 
         return questionsList;
     }
-
+    @Transactional
     public String deleteQuestion(final String accessToken, final String questionId) throws InvalidQuestionException, AuthorizationFailedException {
 
         // get User Entity details based on the accessToken
@@ -94,12 +95,11 @@ public class QuestionsService {
         }
 
         UserEntity userEntity = userDao.getUserEntityById(userAuthTokenEntity.getUuid());
-
+        UserEntity uuidFromQuestionEntity = questionEntity.getUser();
          //if the user who is not the owner of the question or the role of the user is ‘nonadmin’ and
         // tries to delete the question, otherwise  throw 'AuthorizationFailedException' with message code-'ATHR-003'
         // and message -'Only the question owner or admin can delete the question'.
-
-        if (!(userEntity.getUuid().equals(questionEntity.getUuid())) && !(userEntity.getRole().equals("admin"))) {
+        if (!(userEntity.getUuid().equals(uuidFromQuestionEntity.getUuid())) && !(userEntity.getRole().equals("admin"))) {
 
             throw new AuthorizationFailedException("ATHR-003", "Only the question owner or admin can delete the question");
         }

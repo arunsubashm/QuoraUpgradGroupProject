@@ -74,7 +74,7 @@ public class UserController {
         String[] splitText = authorization.split("Basic ");
         SigninResponse signinResponse = null;
         HttpHeaders headers = new HttpHeaders();
-        byte[] decoder = Base64.getDecoder().decode(splitText[1]);
+        byte[] decoder = Base64.getDecoder().decode(splitText[0]);
         String decodedText = new String(decoder);
         String[] decodedTextArray = decodedText.split(":");
         if (decodedTextArray.length == 2) {

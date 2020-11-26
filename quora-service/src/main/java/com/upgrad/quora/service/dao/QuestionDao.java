@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository
@@ -46,6 +47,34 @@ public class QuestionDao {
           return null;
         }
     }
+
+    /**
+     * Method to get a Questions by of a user by Question ID.
+     * @param userID
+     * @Param questionID
+     * @return QuestionEntity
+     * @Catch Exception NoResultException
+     */
+    public QuestionEntity getQuestionByUser (final String questionId) {
+        try {
+            return entityManager.createNamedQuery("getQuestionByUser", QuestionEntity.class)
+                    .setParameter("uuid", questionId)
+                    .getSingleResult();
+        }
+        catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    /**
+     * Method to delete a Questions by Question ID.
+     * @Param questionID
+     * @return QuestionEntity
+     * @Catch Exception NoResultException
+     */
+    public void deleteQuestionByUser (final String questionId) {
+       Query query = entityManager.createQuery("DELETE from QuestionEntity q where q.uuid = :uuid");
+       int deleteCount = query.setParameter("uuid", questionId).executeUpdate();
 
     /** Method to save question
      * @param questionEntity

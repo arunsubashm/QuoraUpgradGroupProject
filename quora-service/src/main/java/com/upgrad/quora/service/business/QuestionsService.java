@@ -9,9 +9,8 @@ import com.upgrad.quora.service.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -69,7 +68,7 @@ public class QuestionsService {
         return questionsList;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     public String deleteQuestion(final String accessToken, final String questionId) throws InvalidQuestionException, AuthorizationFailedException {
 
         // get User Entity details based on the accessToken
@@ -138,7 +137,7 @@ public class QuestionsService {
             throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get all questions posted by a specific user");
         }
         //save the question
-        questionEntity.setUserId(authTokenEntity.getUser());
+        questionEntity.setUser(authTokenEntity.getUser());
         return questionDao.saveQuestion(questionEntity);
     }
 }

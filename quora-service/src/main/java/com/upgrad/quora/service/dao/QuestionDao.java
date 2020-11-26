@@ -73,8 +73,10 @@ public class QuestionDao {
      * @Catch Exception NoResultException
      */
     public void deleteQuestionByUser (final String questionId) {
-       Query query = entityManager.createQuery("DELETE from QuestionEntity q where q.uuid = :uuid");
-       int deleteCount = query.setParameter("uuid", questionId).executeUpdate();
+        Query query = entityManager.createQuery("DELETE from QuestionEntity q where q.uuid = :uuid");
+        int deleteCount = query.setParameter("uuid", questionId).executeUpdate();
+
+    }
 
     /** Method to save question
      * @param questionEntity

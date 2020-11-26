@@ -84,4 +84,15 @@ public class RestExceptionHandler {
     public ResponseEntity<ErrorResponse> requestViolationException(RequestViolationException exception, WebRequest request) {
         return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(exception.getCode()).message(exception.getErrorMessage()), HttpStatus.BAD_REQUEST);
     }
+
+    /** Triggered when the user passed Question ID doesnt exisit
+     *
+     * @param exception request violation exception
+     * @param request
+     * @return
+     */
+    @ExceptionHandler(InvalidQuestionException.class)
+    public ResponseEntity<ErrorResponse> invalidQuestionException(InvalidQuestionException exception, WebRequest request) {
+        return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(exception.getCode()).message(exception.getErrorMessage()), HttpStatus.UNAUTHORIZED);
+    }
 }

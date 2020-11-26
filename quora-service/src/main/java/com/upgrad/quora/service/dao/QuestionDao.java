@@ -1,7 +1,6 @@
 package com.upgrad.quora.service.dao;
 
 import com.upgrad.quora.service.entity.QuestionEntity;
-import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -85,5 +84,13 @@ public class QuestionDao {
     public QuestionEntity saveQuestion(QuestionEntity questionEntity) {
         entityManager.persist(questionEntity);
         return questionEntity;
+    }
+
+    /** Method to update question
+     * @param questionEntity
+     * @return none
+     */
+    public void updateQuestion(final QuestionEntity questionEntity) {
+        entityManager.merge(questionEntity);
     }
 }

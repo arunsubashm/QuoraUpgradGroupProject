@@ -138,7 +138,6 @@ public class QuestionsService {
         }
         //save the question
         questionEntity.setUser(authTokenEntity.getUser());
-        System.out.println("The Username is" + " " + authTokenEntity.getUser().getFirstName());
 
         return questionDao.saveQuestion(questionEntity);
     }

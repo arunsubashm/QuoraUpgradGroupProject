@@ -30,9 +30,9 @@ public class SignupBusinessService {
     public UserEntity signup(UserEntity userEntity) throws SignUpRestrictedException {
 
         //check if email is already registered by fetching the userEntity using username from the request
-        final UserEntity userEntityEmail = userDao.fetchUserByEmail(userEntity.getEmail());
+        final UserEntity userEntityEmail = userDao.getUserByEmail(userEntity.getEmail());
         //check if username is already registered by fetching the userEntity using username from the request
-        final UserEntity userEntityUserName = userDao.fetchUserByUserName(userEntity.getUserName());
+        final UserEntity userEntityUserName = userDao.getUserByUserName(userEntity.getUserName());
         if (null != userEntityUserName) {
             throw new SignUpRestrictedException("SGR-001", "Try any other Username, this Username has already been taken");
         }

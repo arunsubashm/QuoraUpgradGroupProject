@@ -23,27 +23,26 @@ import java.time.ZonedDateTime;
     private static final long serialVersionUID = 6385994496663047405L;
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "UUID")
+    @Column(name = "uuid")
     @NotNull
     private String uuid;
 
-    @Column(name = "CONTENT")
+    @Column(name = "content")
     @NotNull
     @Size(max = 500)
     private String content;
 
-    @Column(name = "DATE")
+    @Column(name = "date")
     @NotNull
     private ZonedDateTime date;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID")
+    @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-
     private UserEntity user;
 
     public long getId() {
@@ -83,6 +82,6 @@ import java.time.ZonedDateTime;
     }
 
     public void setUser(UserEntity userId) {
-        this.user = user;
+        this.user = userId;
     }
 }

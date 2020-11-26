@@ -138,6 +138,50 @@ public class QuestionsService {
         }
         //save the question
         questionEntity.setUser(authTokenEntity.getUser());
+        System.out.println("The Username is" + " " + authTokenEntity.getUser().getFirstName());
+
         return questionDao.saveQuestion(questionEntity);
     }
+
+    /**
+     *
+     * @param accessToken
+     * @param questionEntity
+     * @return questionEntity
+     * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public QuestionEntity updateQuestion(String accessToken, QuestionEntity updatedQuestionEntity) throws AuthorizationFailedException, InvalidQuestionException {
+        UserAuthTokenEntity authTokenEntity = userDao.getUserByAuthtoken(accessToken);
+
+        if (authTokenEntity == null) {
+            throw  new AuthorizationFailedException("ATHR-001", "User has not signed in");
+        }
+
+        if (authTokenEntity.getLogoutAt() != null) {
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to edit the question");
+        }
+
+        UserEntity userEntity = userDao.getUserEntityById(authTokenEntity.getUuid());
+        QuestionEntity questionEntity = questionDao.getQuestionByUser(updatedQuestionEntity.getUuid());
+
+        if (questionEntity == null) {
+            throw new InvalidQuestionException("QUES-001", "Entered question uuid does not exist");
+
+        }
+        //if the user who is not the owner of the question or the role of the user is ‘nonadmin’ and
+        // tries to delete the question, otherwise  throw 'AuthorizationFailedException' with message code-'ATHR-003'
+        // and message -'Only the question owner or admin can delete the question'.
+        if (!(userEntity.getUuid().equals(questionEntity.getUser().getUuid()))) {
+            throw new AuthorizationFailedException("ATHR-003", "Only the question owner can edit the question");
+        }
+
+        questionEntity.setContent(updatedQuestionEntity.getContent());
+
+        questionDao.updateQuestion(questionEntity);
+
+        return questionEntity;
+    }
+
 }

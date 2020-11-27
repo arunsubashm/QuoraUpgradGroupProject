@@ -61,7 +61,6 @@ public class AuthenticationService {
             // Create an authorization token and update the token.
             userDao.createAuthToken(userAuthTokenEntity);
 
-            userDao.updateUser(userEntity);
             return userAuthTokenEntity;
         }
         /**
@@ -80,10 +79,9 @@ public class AuthenticationService {
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity signout(final String authorization) throws SignOutRestrictedException {
-        UserAuthTokenEntity userAuthTokenEntity;
         final ZonedDateTime now = ZonedDateTime.now();
 
-        userAuthTokenEntity = userDao.getUserByAuthtoken(authorization);
+        UserAuthTokenEntity userAuthTokenEntity = userDao.getUserByAuthtoken(authorization);
 
         // check if a valid JWT token of an active user is passed
         if (userAuthTokenEntity != null) {
@@ -109,26 +107,37 @@ public class AuthenticationService {
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public String deleteUserByAuthToken(String authToken, String userId) throws AuthorizationFailedException, UserNotFoundException {
-        UserAuthTokenEntity userAuthTokenEntity = userDao.getUserByAuthtoken(authToken);
-        UserEntity userEntity = userDao.getUserEntityById(userId);
+        UserEntity userEntity = userDao.getUserById(userId);
         //if user is not registered in the system userEntity will be null
         if (null == userEntity){
             throw new UserNotFoundException("USR-001", "User with entered uuid to be deleted does not exist");
         }
+
+        UserAuthTokenEntity userAuthTokenEntity = getAuthToken(authToken, "User has not signed in",
+                "User is signed out");
+
         // non-admin user cannot delete the users
-        if (!"admin".equalsIgnoreCase(userEntity.getRole())){
+        if (!"admin".equalsIgnoreCase(userAuthTokenEntity.getUser().getRole())){
             throw new AuthorizationFailedException("ATHR-003", "Unauthorized Access, Entered user is not an admin");
         }
-        //userAuthTokenEntity is null when user is registered successfully but not signed in to the system.
-        if (userAuthTokenEntity == null) {
-            throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
-        }
-        //logoutAt() gets updated once the user is logged out
-        if (null != userAuthTokenEntity.getLogoutAt()){
-            throw new AuthorizationFailedException("ATHR-002", "User is signed out");
-        }
+
         // delete the user by UUID
         userDao.deleteUser(userId);
+
         return userEntity.getUuid();
+    }
+
+    public UserAuthTokenEntity getAuthToken(String authToken, String signinErr, String signoutErr) throws AuthorizationFailedException {
+        UserAuthTokenEntity authTokenEntity = userDao.getUserByAuthtoken(authToken);
+
+        if (authTokenEntity == null) {
+            throw  new AuthorizationFailedException("ATHR-001", signinErr);
+        }
+
+        if (authTokenEntity.getLogoutAt() != null) {
+            throw new AuthorizationFailedException("ATHR-002", signoutErr);
+        }
+
+        return authTokenEntity;
     }
 }

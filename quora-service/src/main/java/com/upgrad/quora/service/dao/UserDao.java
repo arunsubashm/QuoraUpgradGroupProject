@@ -119,7 +119,7 @@ public class UserDao {
      * @param uuid Unique id of the user
      * @return UserEntity
      */
-    public UserEntity getUserEntityById(final String uuid) {
+    public UserEntity getUserById(final String uuid) {
         try {
             return entityManager.createNamedQuery("getUserByUserId", UserEntity.class).setParameter("uuid", uuid).getSingleResult();
         } catch (NoResultException nre) {

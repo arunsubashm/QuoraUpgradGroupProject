@@ -94,7 +94,7 @@ public class QuestionController {
      * @Param questionId : ID of the Question.
      * @returns : ResponseEntity<QuestionDeletedResponse>
      * @throws AuthorizationFailedException
-     * @throws InvlidQuestionException
+     * @throws InvalidQuestionException
      */
 
     @RequestMapping(method = RequestMethod.DELETE,path = "question/delete/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -112,7 +112,7 @@ public class QuestionController {
      * @return ResponseEntity
      * @throws AuthorizationFailedException, RequestViolationException
      */
-    @RequestMapping(method = RequestMethod.POST, path = "/question/create", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.POST, path = "/question/create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionResponse> createQuestion(@RequestHeader("authorization") final String accessToken,
                                                            final QuestionRequest questionRequest) throws AuthorizationFailedException, RequestViolationException {
         QuestionEntity questionEntity = new QuestionEntity();

@@ -1,0 +1,119 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 1 - signup\
+\
+- New user successful addition\
+- Unsuccessful addition with same username\
+- Unsuccessful addition with same email\
+- Add multiple users\
+- Verify the message on success\
+- Verify the HTTP Status code and message for unsuccessful cases\
+- cross verify with database that the user accounts were created\
+- make sure all users are created as non-admin\
+\
+\
+2 - Sign-in\
+\
+- Proper Base64 username:password == User UUID and JWT returned\
+- Authenticate an already authenticated user == Duplicate record created ?\
+- Send a token with no \'91:\'92\
+- Send an incorrect username\
+- Send an incorrect password\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 - Verify the message on success\
+- Verify the HTTP Status code and message for unsuccessful cases\
+- cross verify with database that the user_auth record is created properly\
+- Try Sign in for different users\
+\
+\
+3 - Sign-out\
+\
+- Check behaviour with proper token\
+- Check behaviour with incorrect token\
+- cross verify with database that the user_auth record is updated with logout time\
+- Verify the HTTP Status code and message for unsuccessful cases\
+\
+\
+4 - Delete User\
+\
+- Check behaviour with a valid UUID\
+- Check behaviour with an invalid UUID\
+- Check behaviour with a valid token\
+- Check behaviour with an invalid token\
+- Check behaviour when the token of the user is not an admin (UUID passed and UUID of token should be different)\
+- Verify the message on success\
+- Verify the HTTP Status code and message for unsuccessful cases\
+- cross verify with database that the user, user_auth, question, answer all records are deleted\
+- Try different users\
+\
+5 - Get User\
+\
+- Check behaviour with incorrect UUID\
+- Check behaviour with an incorrect token\
+- Check behaviour with an incorrect token but logged out\
+ - Check behaviour by passing the token of a different user\
+- Verify the message on success\
+- Verify the HTTP Status code and message for unsuccessful cases\
+- Try different users\
+\
+ \
+6 - Create Question\
+\
+- Make sure new question created with proper token\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 - Check behaviour with an incorrect token\
+- Check behaviour with an incorrect token but logged out\
+- Verify the message on success\
+- Verify the HTTP Status code and message for unsuccessful cases\
+- cross verify with database that the question create in created\
+- Create more than one question for a user, questions from more than one user\
+\
+7 - Update Question\
+\
+- Make sure the question is updated with proper token\
+- Check behaviour with an incorrect token\
+- Check behaviour with an incorrect token but logged out\
+- Check behaviour with a token of a user who didn\'92t create the question\
+- check behaviour by passing an incorrect question Id\
+- Verify the message on success\
+- Verify the HTTP Status code and message for unsuccessful cases\
+- cross verify with database that the question is updated\
+- Create more than one question for a user, questions from more than one user\
+\
+8 - delete Question\
+\
+- Make sure the question is deleted with proper token\
+- Check behaviour with an incorrect token\
+- Check behaviour with an incorrect token but logged out\
+- Check behaviour with a token of a user who didn\'92t create the question or the user is not Admin\
+- check behaviour by passing an incorrect question Id\
+- Verify the message on success\
+- Verify the HTTP Status code and message for unsuccessful cases\
+- cross verify with database that the question and corresponding answers are deleted\
+- Delete more than one question for a user, questions from more than one user\
+\
+9 - Get All Questions\
+\
+- Make sure all the questions are returned with proper token\
+- Check behaviour with an incorrect token\
+- Check behaviour with an incorrect token but logged out\
+- Verify the message on success\
+- Verify the HTTP Status code and message for unsuccessful cases\
+\
+\
+10 - Get Question by ID\
+\
+- Make sure all the questions are returned with proper token and user ID\
+- Check behaviour with an incorrect token\
+- Check behaviour with an incorrect token but logged out\
+- Check behaviour with an incorrect User ID\
+- Check behaviour when user id passed and user id as per token do not match\
+- Verify the message on success\
+- Verify the HTTP Status code and message for unsuccessful cases\
+\
+}

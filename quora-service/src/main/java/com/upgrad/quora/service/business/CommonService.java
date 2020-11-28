@@ -28,11 +28,6 @@ public class CommonService {
         UserAuthTokenEntity authTokenEntity = authenticationService.getAuthToken(accessToken, "User has not signed in",
                 "User is signed out.Sign in first to get user details");
 
-        if (userId.equals(authTokenEntity.getUser().getUuid()) == false) {
-            throw new AuthorizationFailedException("ATHR-003", "The passed UUID and the User of the authorization token does not match");
-
-        }
-
         return userEntity;
     }
 }

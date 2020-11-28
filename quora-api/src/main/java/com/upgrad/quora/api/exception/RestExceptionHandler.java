@@ -96,9 +96,9 @@ public class RestExceptionHandler {
         return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(exception.getCode()).message(exception.getErrorMessage()), HttpStatus.UNAUTHORIZED);
     }
 
-    /** Triggered when the user passed Question ID doesnt exisit
+    /** Triggered when the user passed answer ID doesnt exist
      *
-     * @param exception request violation exception
+     * @param exception AnswerNotFoundException
      * @param request
      * @return
      */

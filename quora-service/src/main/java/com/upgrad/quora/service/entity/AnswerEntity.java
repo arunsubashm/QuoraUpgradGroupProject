@@ -35,6 +35,7 @@ public class AnswerEntity {
     private String answer;
 
     @Column(name = "date")
+    @NotNull
     private ZonedDateTime date;
 
     @ManyToOne(fetch = FetchType.EAGER)

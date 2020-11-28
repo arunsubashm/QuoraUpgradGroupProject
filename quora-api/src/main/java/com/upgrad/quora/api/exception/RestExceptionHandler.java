@@ -95,4 +95,15 @@ public class RestExceptionHandler {
     public ResponseEntity<ErrorResponse> invalidQuestionException(InvalidQuestionException exception, WebRequest request) {
         return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(exception.getCode()).message(exception.getErrorMessage()), HttpStatus.UNAUTHORIZED);
     }
+
+    /** Triggered when the user passed answer ID doesnt exist
+     *
+     * @param exception AnswerNotFoundException
+     * @param request
+     * @return
+     */
+    @ExceptionHandler(AnswerNotFoundException.class)
+    public ResponseEntity<ErrorResponse> answerNotFound(AnswerNotFoundException exception, WebRequest request) {
+        return new ResponseEntity<ErrorResponse>(new ErrorResponse().code(exception.getCode()).message(exception.getErrorMessage()), HttpStatus.NOT_FOUND);
+    }
 }

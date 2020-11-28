@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
                 @NamedQuery(name = "getUserByEmail", query = "select u from UserEntity u where u.email=:email"),
                 @NamedQuery(name = "getUserByUserName", query = "select u from UserEntity u where u.userName=:username"),
                 @NamedQuery(name = "getUserByUserId", query = "select u from UserEntity u where u.uuid=:uuid"),
-                @NamedQuery(name = "deleteUserByUserId", query = "DELETE FROM UserEntity  WHERE uuid = :uuid")
+                @NamedQuery(name = "deleteUserByUserId", query = "DELETE FROM UserEntity c WHERE c.uuid = :uuid")
 
         }
 )

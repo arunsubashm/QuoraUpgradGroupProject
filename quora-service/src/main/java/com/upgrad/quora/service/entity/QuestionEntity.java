@@ -14,13 +14,11 @@ import java.time.ZonedDateTime;
 @NamedQueries({
         @NamedQuery(name = "getAllQuestions", query = "select q from QuestionEntity q"),
         @NamedQuery(name = "getAllQuestionsByUser", query = "select q from QuestionEntity q where q.uuid = :uuid"),
-        @NamedQuery(name = "getQuestionByUser", query = "select q from QuestionEntity q where q.uuid = :uuid"),
+        @NamedQuery(name = "getQuestionByQuestionId", query = "select q from QuestionEntity q where q.uuid = :uuid"),
 
 })
 
     public class QuestionEntity implements Serializable {
-
-    private static final long serialVersionUID = 6385994496663047405L;
 
     @Id
     @Column(name = "id")

@@ -30,7 +30,7 @@ public class QuestionDao {
 
     /**
      * Method to get all Questions by a User ID.
-     * @param userId.
+     * @param UUID of user.
      *
      * @return List<QuestionEntity>
      * @Catch Exception NoResultException
@@ -49,14 +49,14 @@ public class QuestionDao {
 
     /**
      * Method to get a Questions by of a user by Question ID.
-     * @param userID
+     * @param UUID of Question
      * @Param questionID
      * @return QuestionEntity
      * @Catch Exception NoResultException
      */
-    public QuestionEntity getQuestionByUser (final String questionId) {
+    public QuestionEntity getQuestionById (final String questionId) {
         try {
-            return entityManager.createNamedQuery("getQuestionByUser", QuestionEntity.class)
+            return entityManager.createNamedQuery("getQuestionByQuestionId", QuestionEntity.class)
                     .setParameter("uuid", questionId)
                     .getSingleResult();
         }
@@ -71,7 +71,7 @@ public class QuestionDao {
      * @return QuestionEntity
      * @Catch Exception NoResultException
      */
-    public void deleteQuestionByUser (final String questionId) {
+    public void deleteQuestionById (final String questionId) {
         Query query = entityManager.createQuery("DELETE from QuestionEntity q where q.uuid = :uuid");
         int deleteCount = query.setParameter("uuid", questionId).executeUpdate();
 

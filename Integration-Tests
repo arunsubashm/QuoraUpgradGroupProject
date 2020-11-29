@@ -1,0 +1,154 @@
+1 - signup
+
+- New user successful addition
+- Unsuccessful addition with same username
+- Unsuccessful addition with same email
+- Add multiple users
+- Verify the message on success
+- Verify the HTTP Status code and message for unsuccessful cases
+- cross verify with database that the user accounts were created
+- make sure all users are created as non-admin
+
+
+2 - Sign-in
+
+- Proper Base64 username:password == User UUID and JWT returned
+- Authenticate an already authenticated user == Duplicate record created ?
+- Send a token with no ":"
+- Send an incorrect username
+- Send an incorrect password
+- Verify the message on success
+- Verify the HTTP Status code and message for unsuccessful cases
+- cross verify with database that the user_auth record is created properly
+- Try Sign in for different users
+
+
+3 - Sign-out
+
+- Check behaviour with proper token
+- Check behaviour with incorrect token
+- cross verify with database that the user_auth record is updated with logout time
+- Verify the HTTP Status code and message for unsuccessful cases
+
+
+4 - Delete User
+
+- Check behaviour with a valid UUID
+- Check behaviour with an invalid UUID
+- Check behaviour with a valid token
+- Check behaviour with an invalid token
+- Check behaviour when the token of the user is not an admin (UUID passed and UUID of token should be different)
+- Verify the message on success
+- Verify the HTTP Status code and message for unsuccessful cases
+- cross verify with database that the user, user_auth, question, answer all records are deleted
+- Try different users
+
+5 - Get User
+
+- Check behaviour with incorrect UUID
+- Check behaviour with an incorrect token
+- Check behaviour with an incorrect token but logged out
+ - Check behaviour by passing the token of a different user
+- Verify the message on success
+- Verify the HTTP Status code and message for unsuccessful cases
+- Try different users
+
+ 
+6 - Create Question
+
+- Make sure new question created with proper token
+- Check behaviour with an incorrect token
+- Check behaviour with an incorrect token but logged out
+- Verify the message on success
+- Verify the HTTP Status code and message for unsuccessful cases
+- cross verify with database that the question record in created
+- Create more than one question for a user, questions from more than one user
+
+7 - Update Question
+
+- Make sure the question is updated with proper token
+- Check behaviour with an incorrect token
+- Check behaviour with an incorrect token but logged out
+- Check behaviour with a token of a user who didn't create the question
+- check behaviour by passing an incorrect question Id
+- Verify the message on success
+- Verify the HTTP Status code and message for unsuccessful cases
+- cross verify with database that the question is updated
+- Create more than one question for a user, questions from more than one user
+
+8 - delete Question
+
+- Make sure the question is deleted with proper token
+- Check behaviour with an incorrect token
+- Check behaviour with an incorrect token but logged out
+- Check behaviour with a token of a user who didn't create the question or the user is not Admin
+- check behaviour by passing an incorrect question Id
+- Verify the message on success
+- Verify the HTTP Status code and message for unsuccessful cases
+- cross verify with database that the question and corresponding answers are deleted
+- Delete more than one question for a user, questions from more than one user
+
+9 - Get All Questions
+
+- Make sure all the questions are returned with proper token
+- Check behaviour with an incorrect token
+- Check behaviour with an incorrect token but logged out
+- Verify the message on success
+- Verify the HTTP Status code and message for unsuccessful cases
+
+
+10 - Get Question by ID
+
+- Make sure all the questions are returned with proper token and user ID
+- Check behaviour with an incorrect token
+- Check behaviour with an incorrect token but logged out
+- Check behaviour with an incorrect User ID
+- Check behaviour when user id passed and user id as per token do not match
+- Verify the message on success
+- Verify the HTTP Status code and message for unsuccessful cases
+
+11 - Create Answer
+
+- Make sure new answer is created with proper token and question id
+- Check behaviour with an incorrect token
+- Check behaviour with an incorrect token but logged out
+- Check behaviour with invalid Question ID
+- Verify the message on success
+- Verify the HTTP Status code and message for unsuccessful cases
+- cross verify with database that the answer record in created
+- Create more than one answer for a user, answers from more than one user, more than one answer to the same question
+
+12 - Edit Answer
+
+- Make sure you can update answer with proper token and answer id
+- Check behaviour with an incorrect token
+- Check behaviour with an incorrect token but logged out
+- Check behaviour with invalid answer ID
+- Check the behaviour when a different user tried to edit an answer
+- Verify the message on success
+- Verify the HTTP Status code and message for unsuccessful cases
+- cross verify with database that the answer record in updated
+- Update more than one answer for a user, answers from more than one user, more than one answer to the same question
+
+13 - Delete Answer
+
+- Make sure you can delete answer with proper token and answer id
+- Check behaviour with an incorrect token
+- Check behaviour with an incorrect token but logged out
+- Check behaviour with invalid answer ID
+- Check the behaviour when a different user tried to delete an answer and is not an admin
+- Verify the message on success
+- Verify the HTTP Status code and message for unsuccessful cases
+- cross verify with database that the answer record in deleted
+- Update more than one answer for a user, answers from more than one user, more than one answer to the same question
+
+14 - Get all Answers
+
+- Make sure you can get answers with proper token and answer id
+- Check behaviour with an incorrect token
+- Check behaviour with an incorrect token but logged out
+- Check behaviour with invalid question ID
+- Verify the message on success
+- Verify the HTTP Status code and message for unsuccessful cases
+- check for more than one question
+

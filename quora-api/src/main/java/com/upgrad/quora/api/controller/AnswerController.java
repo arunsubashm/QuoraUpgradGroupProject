@@ -33,9 +33,9 @@ public class AnswerController {
      * @throws AnswerNotFoundException
      */
     @RequestMapping(method = RequestMethod.DELETE, path = "/answer/delete/{answerId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<AnswerDeleteResponse> deleteUser(@RequestHeader("authorization") final String authorization, @PathVariable String answerId) throws AuthorizationFailedException,
+    public ResponseEntity<AnswerDeleteResponse> deleteAnswer(@RequestHeader("authorization") final String authorization, @PathVariable String answerId) throws AuthorizationFailedException,
             UserNotFoundException, AnswerNotFoundException {
-        AnswerEntity answerEntity = answerService.deleteQuestion(authorization, answerId);
+        AnswerEntity answerEntity = answerService.deleteAnswer(authorization, answerId);
         final AnswerDeleteResponse answerDeleted = new AnswerDeleteResponse().id(answerEntity.getUuid()).status("ANSWER DELETED");
         return new ResponseEntity<AnswerDeleteResponse>(answerDeleted, HttpStatus.OK);
     }
@@ -61,5 +61,30 @@ public class AnswerController {
 
         AnswerResponse answerResponse = new AnswerResponse().id(answerEntity.getUuid()).status("ANSWER CREATED");
         return new ResponseEntity<AnswerResponse>(answerResponse, HttpStatus.CREATED);
+    }
+
+
+    /**
+     * End point to edit answer's
+     * @param accessToken
+     * @param answerId
+     * @param answerEditRequest
+     * @return
+     * @throws AuthorizationFailedException
+     * @throws AnswerNotFoundException
+     */
+    @RequestMapping(method = RequestMethod.PUT, path = "/answer/edit/{answerId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<AnswerEditResponse> editAnswer(@RequestHeader("authorization") final String accessToken,
+                                                         @PathVariable("answerId") final String answerId, final AnswerEditRequest answerEditRequest) throws AuthorizationFailedException, AnswerNotFoundException {
+
+        //update the details.
+        AnswerEntity answerEntity = new AnswerEntity();
+        answerEntity.setUuid(answerId);
+        answerEntity.setAnswer(answerEditRequest.getContent());
+        answerEntity.setDate(ZonedDateTime.now());
+
+        final AnswerEntity updatedAnswerEntity = answerService.editAnswer(accessToken, answerId, answerEntity);
+        AnswerEditResponse response = new AnswerEditResponse().id(updatedAnswerEntity.getUuid()).status("ANSWER EDITED");
+        return new ResponseEntity<AnswerEditResponse>(response, HttpStatus.OK);
     }
 }

@@ -56,4 +56,13 @@ public class AnswerDao {
             return null;
         }
     }
+
+    /** edit the answer details
+     * @param answerEntity the details that needs to be updated
+     * @return answerEntity once merge is success
+     */
+    public AnswerEntity editAnswer(AnswerEntity answerEntity) {
+        entityManager.merge(answerEntity);
+        return answerEntity;
+    }
 }

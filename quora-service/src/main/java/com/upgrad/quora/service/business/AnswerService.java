@@ -33,7 +33,7 @@ public class AnswerService {
      * @return AnswerEntity
      */
     @Transactional(propagation = Propagation.REQUIRED)
-    public AnswerEntity deleteQuestion(String authorization, String answerId) throws AnswerNotFoundException, AuthorizationFailedException {
+    public AnswerEntity deleteAnswer(String authorization, String answerId) throws AnswerNotFoundException, AuthorizationFailedException {
 
         final UserAuthTokenEntity userAuthDetails = authenticationService.getAuthToken(authorization, "User has not signed in", "User is signed out.Sign in first to delete an answer");
         AnswerEntity answerDetails = getAnswerDetailsWithAnswerId(answerId);

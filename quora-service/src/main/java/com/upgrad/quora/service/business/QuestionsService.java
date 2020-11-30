@@ -53,7 +53,7 @@ public class QuestionsService {
             throw new AuthorizationFailedException("ATHR-003", "User ID and Token ID passed mismatch");
         }
 
-        List<QuestionEntity> questionsList = questionDao.getAllQuestionsByUser(userId);
+        List<QuestionEntity> questionsList = questionDao.getAllQuestionsByUser(userEntity);
 
         return questionsList;
     }

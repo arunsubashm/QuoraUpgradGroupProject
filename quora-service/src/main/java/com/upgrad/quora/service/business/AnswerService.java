@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
+
 @Service
 public class AnswerService {
 
@@ -34,12 +36,8 @@ public class AnswerService {
     public AnswerEntity deleteQuestion(String authorization, String answerId) throws AnswerNotFoundException, AuthorizationFailedException {
 
         final UserAuthTokenEntity userAuthDetails = authenticationService.getAuthToken(authorization, "User has not signed in", "User is signed out.Sign in first to delete an answer");
-        AnswerEntity answerDetails = answerDao.getAnswerDetails(answerId);
-        //if answerDetails are not found then throws AnswerNotFoundException
-        if (answerDetails == null) {
-            throw new AnswerNotFoundException("ANS-001", "Entered answer uuid does not exist");
-        }
-       //user should either be ADMIN or owner to delete the answer
+        AnswerEntity answerDetails = getAnswerDetailsWithAnswerId(answerId);
+        //user should either be ADMIN or owner to delete the answer
         if (!userAuthDetails.getUser().getRole().equalsIgnoreCase("ADMIN")
                 && !userAuthDetails.getUser().getUuid().equals(answerDetails.getUserId().getUuid())) {
             throw new AuthorizationFailedException("ATHR-003", "Only the answer owner or admin can delete the answer");
@@ -68,5 +66,45 @@ public class AnswerService {
 
         return answerDao.saveAnswer(answerEntity);
 
+    }
+
+
+    /** check if there are any answer with provided answerId.
+     *
+     * @param answerId to fetch Answer Details from db
+     * @return answerDetails details of Answer for provided answerId
+     * @throws AnswerNotFoundException if answer is not found
+     */
+    private AnswerEntity getAnswerDetailsWithAnswerId(@NotNull String answerId) throws AnswerNotFoundException {
+        AnswerEntity answerDetails = answerDao.getAnswerDetails(answerId);
+        //if answerDetails are not found then throws AnswerNotFoundException
+        if (answerDetails == null) {
+            throw new AnswerNotFoundException("ANS-001", "Entered answer uuid does not exist");
+        }
+        return answerDetails;
+    }
+
+    /**
+     *
+     * @param authorization access-token
+     * @param answerId to fetch Answer Details from db
+     * @param answerEntity
+     * @return answerDetails details of Answer for provided answerId
+     * @throws AuthorizationFailedException if invalid access token is provided
+     * @throws AnswerNotFoundException if answer is not found
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public AnswerEntity editAnswer(String authorization, String answerId, AnswerEntity answerEntity) throws AuthorizationFailedException, AnswerNotFoundException {
+        final UserAuthTokenEntity userAuthDetails = authenticationService.getAuthToken(authorization, "User has not signed in", "User is signed out.Sign in first to edit an answer");
+        final AnswerEntity answerDetailsWithAnswerId = getAnswerDetailsWithAnswerId(answerId);
+
+        //only the person who has posted the question has the ablity to edit it else throw AuthorizationFailedException
+        if (!userAuthDetails.getUser().getUuid().equals(answerDetailsWithAnswerId.getUserId().getUuid())){
+            throw new AuthorizationFailedException("ATHR-003", "Only the answer owner can edit the answer");
+        }
+
+        answerDetailsWithAnswerId.setAnswer(answerEntity.getAnswer());
+        answerDetailsWithAnswerId.setDate(answerEntity.getDate());
+        return answerDao.editAnswer(answerDetailsWithAnswerId);
     }
 }

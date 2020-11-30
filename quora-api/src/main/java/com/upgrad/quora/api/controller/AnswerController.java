@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -86,5 +88,27 @@ public class AnswerController {
         final AnswerEntity updatedAnswerEntity = answerService.editAnswer(accessToken, answerId, answerEntity);
         AnswerEditResponse response = new AnswerEditResponse().id(updatedAnswerEntity.getUuid()).status("ANSWER EDITED");
         return new ResponseEntity<AnswerEditResponse>(response, HttpStatus.OK);
+    }
+    /**
+     * End point to  get all answers to a particular question
+     * @param accessToken
+     * @param questionId
+     * @return all the answers posted for that particular question from the database
+     * @throws AuthorizationFailedException
+     * @throws InvalidQuestionException
+     */
+    @RequestMapping(method = RequestMethod.GET, path = "answer/all/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<AnswerDetailsResponse>> getAllAnswersToQuestion(@RequestHeader("authorization") final String accessToken, @PathVariable("questionId") final String questionId) throws AuthorizationFailedException, InvalidQuestionException {
+
+        List<AnswerDetailsResponse> listAnswerDetailsResponse = new ArrayList<AnswerDetailsResponse>();
+        List<AnswerEntity> answerEntityList = answerService.getAllAnswersToQuestion(accessToken, questionId);
+        if (answerEntityList != null && !answerEntityList.isEmpty()) {
+            for (AnswerEntity answerEntity : answerEntityList) {
+                listAnswerDetailsResponse.add(new AnswerDetailsResponse().id(answerEntity.getUuid())
+                        .answerContent(answerEntity.getAnswer()).questionContent(answerEntity.getQuestionId().getContent()));
+            }
+        }
+        return new ResponseEntity<List<AnswerDetailsResponse>>(listAnswerDetailsResponse, HttpStatus.OK);
+
     }
 }

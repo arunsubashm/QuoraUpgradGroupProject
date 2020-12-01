@@ -1,11 +1,14 @@
 package com.upgrad.quora.service.dao;
 
 import com.upgrad.quora.service.entity.AnswerEntity;
+import com.upgrad.quora.service.entity.QuestionEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 @Repository
 public class AnswerDao {
@@ -64,5 +67,24 @@ public class AnswerDao {
     public AnswerEntity editAnswer(AnswerEntity answerEntity) {
         entityManager.merge(answerEntity);
         return answerEntity;
+    }
+
+    /**
+     * Method to get all Answers by a Question ID.
+     * @param question_id of Question.
+     *
+     * @return List<AnswerEntity>
+     * @Catch Exception NoResultException
+     */
+    public List<AnswerEntity> getAllAnswersById(final QuestionEntity  questionId) {
+        try {
+            List answersList = entityManager.createNamedQuery("getAnswersByAQuestionId")
+                    .setParameter("questionId", questionId)
+                    .getResultList();
+
+            return answersList;
+        } catch (NoResultException nre) {
+            return null;
+        }
     }
 }

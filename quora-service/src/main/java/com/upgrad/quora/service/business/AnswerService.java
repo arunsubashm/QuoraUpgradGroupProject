@@ -123,13 +123,14 @@ public class AnswerService {
     public List<AnswerEntity> getAllAnswersToQuestion(final String accessToken, String questionId) throws AuthorizationFailedException, InvalidQuestionException {
         UserAuthTokenEntity authTokenEntity = authenticationService.getAuthToken(accessToken,
                 "User has not signed in", "User is signed out.Sign in first to get the answers");
+        QuestionEntity questionEntity = null;
         if (authTokenEntity != null) {
 
-            QuestionEntity questionEntity = questionDao.getQuestionById(questionId);
+            questionEntity = questionDao.getQuestionById(questionId);
             if (questionEntity == null) {
                 throw new InvalidQuestionException("QUES-001", "The question with entered uuid whose details are to be seen does not exist");
             }
         }
-        return answerDao.getAllAnswersById(questionId);
+        return answerDao.getAllAnswersById(questionEntity);
     }
 }

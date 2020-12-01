@@ -71,15 +71,15 @@ public class AnswerDao {
 
     /**
      * Method to get all Answers by a Question ID.
-     * @param UUID of Question.
+     * @param question_id of Question.
      *
      * @return List<AnswerEntity>
      * @Catch Exception NoResultException
      */
-    public List<AnswerEntity> getAllAnswersById(final String  questionId) {
+    public List<AnswerEntity> getAllAnswersById(final QuestionEntity  questionId) {
         try {
-            List answersList = entityManager.createNamedQuery("getAnswerDetailsByAnswerId")
-                    .setParameter("uuid", questionId)
+            List answersList = entityManager.createNamedQuery("getAnswersByAQuestionId")
+                    .setParameter("questionId", questionId)
                     .getResultList();
 
             return answersList;

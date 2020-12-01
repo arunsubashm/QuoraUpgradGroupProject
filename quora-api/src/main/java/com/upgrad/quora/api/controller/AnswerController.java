@@ -97,7 +97,7 @@ public class AnswerController {
      * @throws AuthorizationFailedException
      * @throws InvalidQuestionException
      */
-    @RequestMapping(method = RequestMethod.GET, path = "answer/all/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.GET, path = "answer/all/{questionId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<AnswerDetailsResponse>> getAllAnswersToQuestion(@RequestHeader("authorization") final String accessToken, @PathVariable("questionId") final String questionId) throws AuthorizationFailedException, InvalidQuestionException {
 
         List<AnswerDetailsResponse> listAnswerDetailsResponse = new ArrayList<AnswerDetailsResponse>();

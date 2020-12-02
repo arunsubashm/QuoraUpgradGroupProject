@@ -131,6 +131,7 @@ public class QuestionController {
 
         questionEntity.setContent(questionEditRequest.getContent());
         questionEntity.setUuid(id);
+        questionEntity.setDate(ZonedDateTime.now());
 
         questionsService.updateQuestion(accessToken, questionEntity);
 

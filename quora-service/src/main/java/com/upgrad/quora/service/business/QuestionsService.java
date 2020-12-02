@@ -28,7 +28,7 @@ public class QuestionsService {
     @Transactional
     public List<QuestionEntity> getAllQuestions(final String accessToken) throws  AuthorizationFailedException  {
         UserAuthTokenEntity authTokenEntity = authenticationService.getAuthToken(accessToken,
-                "User has not signed in", "User is signed out.Sign in first to get all questions posted by a specific user");
+                "User has not signed in", "User is signed out.Sign in first to get all questions");
 
         List<QuestionEntity> questions = questionDao.getAllQuestions();
 
@@ -140,6 +140,7 @@ public class QuestionsService {
         }
 
         questionEntity.setContent(updatedQuestionEntity.getContent());
+        questionEntity.setDate(updatedQuestionEntity.getDate());
 
         questionDao.updateQuestion(questionEntity);
 
